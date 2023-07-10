@@ -1,8 +1,6 @@
 import pygame
 from Settings import *
 
-
-
 class Item:
 	
 	def __init__(self,l,t,w,h,selection_index,font):
@@ -19,7 +17,7 @@ class Item:
 		title_rect = title_surf.get_rect(midtop = self.rect.midtop + pygame.math.Vector2(0,20))
 		# cost display 
 		cost_surf = self.font.render(f"{int(cost)}",False,color)
-		cost_rect = cost_surf.get_rect(midbottom = self.rect.midbottom -  pygame.math.Vector2(0,20))
+		cost_rect = cost_surf.get_rect(midbottom = self.rect.midbottom - pygame.math.Vector2(0,20))
 		
 		surface.blit(title_surf,title_rect)
 		
@@ -33,12 +31,10 @@ class Item:
 		color = Bar_colorselected if selected else Bar_color
 		
 		#setup
-		
 		full_height = bottom[1] - top[1]
 		relative_number = (value/max_value) * full_height
 		value_rect = pygame.Rect(top[0] - 15 ,bottom[1] - relative_number,30,10)
-		
-		
+
 		#rendering the lines
 		
 		pygame.draw.line(surface,color,top,bottom,5)

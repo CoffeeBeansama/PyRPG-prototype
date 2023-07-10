@@ -1,5 +1,5 @@
-WIDTH    = 200
-HEIGTH   = 100
+WIDTH    = 800
+HEIGTH   = 600
 FPS      = 60
 TILESIZE = 64
 

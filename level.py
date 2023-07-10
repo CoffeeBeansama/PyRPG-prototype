@@ -34,10 +34,7 @@ class YsortCameraGroup(pygame.sprite.Group):
 			for enemy in enemy_sprites:
 				enemy.enemy_update(player)
 				
-				
-			
-			
-		
+
 		def custom_draw(self,player):
 			
 			#getting the offset  for camera
@@ -67,8 +64,8 @@ class Level:
 		self.attack_sprites = pygame.sprite.Group()
 		self.attackable_sprites = pygame.sprite.Group()
 		self.screen = pygame.display.set_mode((WIDTH,HEIGTH))
-		self.title_image = pygame.image.load('Title.png')
-		self.start_image = pygame.image.load("Button.png")
+		self.title_image = pygame.transform.scale(pygame.image.load('Title.png'),(400,150))
+		self.start_image = pygame.transform.scale(pygame.image.load("Button.png"),(180,80))
 		self.setting_image = pygame.image.load("Graphics/Buttons/Settings.png")
 		
 		
@@ -264,10 +261,7 @@ class Level:
 	def upgrade_ui(self):
 		pass	
 					
-				
-				
-				    
-	
+
 	def run(self):
 		pos = pygame.mouse.get_pos()
 		
@@ -293,9 +287,9 @@ class Level:
 				self.ui.display(self.player)
 				
 		else:
-			title = self.screen.blit(self.title_image,(430,100))
+			title = self.screen.blit(self.title_image,(210,100))
 			
-			start_button = self.screen.blit(self.start_image,(450,350))
+			start_button = self.screen.blit(self.start_image,(310,290))
 			if start_button.collidepoint(pos):
 				self.start_level = True
 			
