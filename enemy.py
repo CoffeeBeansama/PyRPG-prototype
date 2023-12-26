@@ -1,5 +1,5 @@
 import pygame
-from Settings import *
+from settings import *
 from entity import Entity
 from Support import *
 from debug import debug

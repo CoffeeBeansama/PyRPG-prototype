@@ -45,27 +45,6 @@ weapon_data = {
 }
 #magic
 magic_data = {
-
 "flame" : { 'strength': 5, 'mana_cost': 20, 'graphic': 'Graphics/particles/flame/fire.png'},
 "heal" : { "strength": 20, "mana_cost": 10, 'graphic': 'Graphics/particles/heal/heal.png' }
-
 }
-
-#enemy info
-
-enemy_data = {
-
-'squid' : {"health": 100, 'exp': 100, 'damage': 20, 'attack_type': "slash", "attack_sfx" : "audio/attack/slash.wav",'speed': 6,'knockback': 3, 'attack_radius': 80, "patrol_radius": 360 },
-
-'raccoon' : {"health": 500, 'exp': 250, 'damage': 40, 'attack_type': "claw", "attack_sfx" : "audio/attack/claw.wav",'speed': 4,'knockback': 2, 'attack_radius': 120, "patrol_radius": 400 },
-
-'spirit' : {"health": 100, 'exp': 110, 'damage': 8, 'attack_type': "thunder", "attack_sfx" : "audio/attack/fireball.wav",'speed': 8,'knockback': 3, 'attack_radius': 60, "patrol_radius": 350 },
-
-'bamboo' : {"health": 70, 'exp': 100, 'damage': 6, 'attack_type': "leaf_attack", "attack_sfx" : "audio/attack/slash.wav",'speed': 6,'knockback': 3, 'attack_radius': 50, "patrol_radius": 300 }
-
-
-}
-
-
-
- 

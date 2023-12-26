@@ -1,5 +1,5 @@
 import pygame
-from Settings import *
+from settings import *
 from debug import debug
 from item import Item
 

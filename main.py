@@ -1,5 +1,5 @@
 import pygame, sys
-from Settings import *
+from settings import *
 from level import Level
 from player import * 
 from Buttons import *

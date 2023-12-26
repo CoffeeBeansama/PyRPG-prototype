@@ -1,5 +1,5 @@
 import pygame,sys	
-from  Settings import *
+from settings import *
 from tiles import Tiles
 from player import Player
 from debug import debug
@@ -171,10 +171,10 @@ class Level:
 		
 		#map layout imports
 		layouts = {
-				"boundary": import_csv_layout("Map/map_FloorBlocks.csv"),
-				"grass": import_csv_layout("Map/map_Grass.csv"),
-				"object": import_csv_layout("Map/map_Objects.csv"),
-				"entities": import_csv_layout("Map/map_Entities.csv")
+				"boundary": import_csv_layout("map/map_FloorBlocks.csv"),
+				"grass": import_csv_layout("map/map_Grass.csv"),
+				"object": import_csv_layout("map/map_Objects.csv"),
+				"entities": import_csv_layout("map/map_Entities.csv")
 		}
 		props = {
 				"grass": import_folder("Graphics/grass/"),

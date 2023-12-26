@@ -1,53 +1,74 @@
 import pygame
-from Settings import *
+from settings import *
 from debug import debug
 from Support import import_folder
 from entity import Entity
 
 class Player(Entity):
-	def __init__(self,pos,sprite_group,obstacle_sprites,create_weapon,destroy_weapon,cast_magic):
-		super().__init__(sprite_group)
-		
-		#rendering/graphics
-		self.image = pygame.image.load("Graphics/test/player.png").convert_alpha()
-		self.rect  = self.image.get_rect(topleft = pos)
-		self.collision_sprites = obstacle_sprites
-		
-		self.Up_image = pygame.image.load("Graphics/Buttons/Up.png")
-		self.Down_image = pygame.image.load("Graphics/Buttons/Down.png")
-		self.Left_image = pygame.image.load("Graphics/Buttons/Left.png")
-		self.Right_image = pygame.image.load("Graphics/Buttons/Right.png")
-		
-		self.melee_image = pygame.image.load("Graphics/Buttons/melee.png")
-		self.magic_image = pygame.image.load("Graphics/Buttons/magic.png")
-		
-		self.melee_weaponchange_image = pygame.image.load("Graphics/Buttons/MeleeWeaponChange.png")
-		self.import_player_assets()
-		
-		self.magic_weaponchange_image = pygame.image.load("Graphics/Buttons/MagicWeaponChange.png")
-		
-		self.setting_image = pygame.image.load("Graphics/Buttons/Settings.png")
-		
-		
-		self.import_player_assets()
-		
-		self.screen = pygame.display.set_mode((WIDTH,HEIGTH))
-		self.hitbox = self.rect.inflate(0,-26)
-		
-		
-		#movement
-		self.state  = "down_idle"
-		self.current_direction = "down"
-		self.button_clicked = False
-		
+    def __init__(self,pos,sprite_group,obstacle_sprites,create_weapon,destroy_weapon,cast_magic):
+        super().__init__(sprite_group)
+        self.screen = pygame.display.get_surface()
+        self.cast_magic = cast_magic
+        self.create_weapon = create_weapon
+        self.collision_sprites = obstacle_sprites
 
-		#attacks
-		self.attacking = False
-		self.attack_cooldown = 300
-		self.attack_time = 0
-		
-		#weapons
-		self.create_weapon = create_weapon
+        self.image = pygame.image.load("Graphics/test/player.png").convert_alpha()
+        self.rect  = self.image.get_rect(topleft = pos)
+        self.hitbox = self.rect.inflate(0,-26)
+
+        self.Up_image = pygame.image.load("Graphics/Buttons/Up.png")
+        self.Down_image = pygame.image.load("Graphics/Buttons/Down.png")
+        self.Left_image = pygame.image.load("Graphics/Buttons/Left.png")
+        self.Right_image = pygame.image.load("Graphics/Buttons/Right.png")
+
+        self.melee_image = pygame.image.load("Graphics/Buttons/melee.png")
+        self.magic_image = pygame.image.load("Graphics/Buttons/magic.png")
+
+        self.melee_weaponchange_image = pygame.image.load("Graphics/Buttons/MeleeWeaponChange.png")
+        self.magic_weaponchange_image = pygame.image.load("Graphics/Buttons/MagicWeaponChange.png")
+        self.setting_image = pygame.image.load("Graphics/Buttons/Settings.png")
+
+        self.import_player_assets()
+        self.initializePlayerMagic()
+        self.initializePlayerWeapons()
+        self.initializePlayerStats()
+
+        self.state  = "down_idle"
+        self.current_direction = "down"
+        self.button_clicked = False
+
+        self.attacking = False
+        self.attack_cooldown = 300
+        self.attack_time = 0
+
+        self.display_menu = False
+        self.vulnerable = True
+        self.hurt_time = 0
+        self.invincibility_frame = 600
+
+	def import_player_assets(self):
+
+		player_path = "Graphics/player/"
+
+		self.animations = {'up': [],'down': [],'left': [],'right': [],
+			'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],
+			'right_attack':[],'left_attack':[],'up_attack':[],'down_attack':[]
+		}
+
+		for animation in self.animations.keys():
+			full_path  = player_path + animation
+			self.animations[animation] = import_folder(full_path)
+
+
+	def initializePlayerMagic(self):
+		self.magic_index = 0
+		self.magic = list(magic_data.keys())[self.magic_index]
+		self.can_switch_magic = True
+		self.magic_switch_time = 0
+		self.magic_switch_cooldown = 300
+		self.magic_data = magic_data
+
+    def initializePlayerWeapons(self):
 		self.weapon_index = 0
 		self.weapon = list(weapon_data.keys())[self.weapon_index]
 		self.destroy_weapon = destroy_weapon
@@ -55,109 +76,67 @@ class Player(Entity):
 		self.weapon_switch_time = 0
 		self.weapon_switch_cooldown = 300
 		self.weapon_data = weapon_data
-		
-		
-		
-		#magic
-		self.cast_magic = cast_magic
-		
-		self.magic_index = 0
-		self.magic = list(magic_data.keys())[self.magic_index]
-		self.can_switch_magic = True
-		self.magic_switch_time = 0
-		self.magic_switch_cooldown = 300
-		self.magic_data = magic_data
-		
 
-		
-		#player stats
-		
+    def initializePlayerStats(self):
 		self.base_stats = {"health" : 100, "mana":60,"attack":10, "magic": 4, "speed": 20}
-		
 		self.max_stats = {"health" : 300, "mana":140,"attack":20, "magic": 10, "speed": 30}
-		
 		self.upgrade_cost = {"health" : 100, "mana":100,"attack":100, "magic": 100, "speed": 100}
 		self.health = self.base_stats["health"] * 0.8
 		self.mana = self.base_stats["mana"] * 0.8
 		self.exp = 300
-		
-		self.display_menu = False
-		self.vulnerable = True
-		self.hurt_time = 0
-		
-		self.invincibility_frame = 600
-	
-	
-				
-	def import_player_assets(self):
-		
-		player_path = "Graphics/player/"
-		
-		self.animations = {'up': [],'down': [],'left': [],'right': [],
-			'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],
-			'right_attack':[],'left_attack':[],'up_attack':[],'down_attack':[]
-		}
-		
-		for animation in self.animations.keys():
-			full_path  = player_path + animation
-			self.animations[animation] = import_folder(full_path)
-		print(self.animations)
-		
-		
+
 	def get_states(self):
-		
+
 		if self.direction.x == 0 and self.direction.y == 0:
 			if not "idle" in self.state and not "attack" in self.state:
 				self.state = self.state + "_idle"
-				
+
 		if self.attacking:
 			self.direction.x = 0
 			self.direction.y = 0
-			
-	 
-	
+
+
+
 	#cooldown
 	def cooldowns(self):
-		
+
 		current_time = pygame.time.get_ticks()
-		#checks if attacking and reverts back to idle state and checks where is player is facing
+        #checks if attacking and reverts back to idle state and checks where is player is facing
 		switch_weapon_tick = current_time - self.weapon_switch_time >= self.weapon_switch_cooldown + weapon_data[self.weapon]['cooldown']
-		
+
 		switch_magic_tick = current_time - self.magic_switch_time >= self.magic_switch_cooldown 
-		
-		
+
+
 		if not self.can_switch_weapon:
 			if switch_weapon_tick:
 				self.can_switch_weapon = True
 				pygame.mouse.set_pos(0,0)
-				
+
 		if not self.can_switch_magic:
 			if switch_magic_tick:
 				self.can_switch_magic = True
 				pygame.mouse.set_pos(0,0)
-				
+
 		if not self.vulnerable:
 			alpha = self.wave_value()
 			self.image.set_alpha(alpha)
-	
+
 			if current_time - self.hurt_time >= self.invincibility_frame:
-				
+
 				self.vulnerable = True
 		else: self.image.set_alpha(255)
-			
-		
+
+
 		if self.attacking:
 			if current_time - self.attack_time >= self.attack_cooldown:
-			         self.attacking = False
-			         self.destroy_weapon()
-			         
-			         pygame.mouse.set_pos(0,0)
-			         if self.current_direction == "up":
-			         	self.state = "up_idle"
-			         elif self.current_direction == "down":
-			         	self.state = "down_idle"
-			         elif self.current_direction == "left":
-			         	self.state = "left_idle"
+               self.attacking = False
+               self.destroy_weapon()
+               pygame.mouse.set_pos(0,0)
+               if self.current_direction == "up":
+                   self.state = "up_idle"
+               elif self.current_direction == "down":
+                   self.state = "down_idle"
+               elif self.current_direction == "left":self.state = "left_idle"
 			         elif self.current_direction == "right":
 			         	self.state = "right_idle"
 	
